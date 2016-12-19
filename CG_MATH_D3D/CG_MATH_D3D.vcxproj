@@ -347,9 +347,25 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Tutorial01.cpp" />
+    <ClCompile Include="EulerAngles.cpp" />
+    <ClCompile Include="FPScamera.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MathUtil.cpp" />
+    <ClCompile Include="Matrix4x3.cpp" />
+    <ClCompile Include="Matrix4x4.cpp" />
+    <ClCompile Include="Quaternion.cpp" />
+    <ClCompile Include="RotationMatrix.cpp" />
+    <ClCompile Include="vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="EulerAngles.h" />
+    <ClInclude Include="FPScamera.h" />
+    <ClInclude Include="MathUtil.h" />
+    <ClInclude Include="Matrix4x3.h" />
+    <ClInclude Include="Matrix4x4.h" />
+    <ClInclude Include="Quaternion.h" />
+    <ClInclude Include="RotationMatrix.h" />
+    <ClInclude Include="vector3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

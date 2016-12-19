@@ -15,7 +15,6 @@
 #include <windows.h>
 #include <d3d11_1.h>
 #include <directxcolors.h>
-//#include "resource.h"
 
 using namespace DirectX;
 
@@ -51,6 +50,7 @@ void Render();
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow )
 {
+
     UNREFERENCED_PARAMETER( hPrevInstance );
     UNREFERENCED_PARAMETER( lpCmdLine );
 

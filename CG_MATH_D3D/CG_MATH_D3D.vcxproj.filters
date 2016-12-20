@@ -37,6 +37,9 @@
     <ClCompile Include="Matrix4x3.cpp">
       <Filter>SourceFile</Filter>
     </ClCompile>
+    <ClCompile Include="inputclass.cpp">
+      <Filter>SourceFile</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EulerAngles.h">
@@ -61,6 +64,9 @@
       <Filter>HeadFile</Filter>
     </ClInclude>
     <ClInclude Include="Matrix4x3.h">
+      <Filter>HeadFile</Filter>
+    </ClInclude>
+    <ClInclude Include="inputclass.h">
       <Filter>HeadFile</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "vector3.h"
-#include "Quaternion.h"
 #include "Matrix4x3.h"
+#include "EulerAngles.h"
 
 using namespace CG_MATH;
 
@@ -13,14 +13,14 @@ public:
 	//公共数据
 	
 	vector3 pos;
-	Quaternion dir;
+	EulerAngles dir;
 
 
 	//公共操作
 
 	// 初始化相机位置，世界坐标原点，朝向-Z轴。
 
-	FPScamera() :pos(0.0f, 0.0f, 0.0f), dir(kQuaternionIdentity), _controlHeading(0), _controlPitch(0), _controlBank(0){}
+	FPScamera() :pos(0.0f, 0.0f, 0.0f), dir(kEulerAnglesIdentity) {}
 	
 	//移动位置
 
@@ -34,13 +34,5 @@ public:
 
 	Matrix4x3 getMatrix();
 
-private:
-	
-	//私有数据
-
-	// 控制相机方向的欧拉角， 单位为弧度。
-	float _controlHeading;
-	float _controlPitch;
-	float _controlBank;
 };
 

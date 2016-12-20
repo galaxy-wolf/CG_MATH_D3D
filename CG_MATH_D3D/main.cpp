@@ -18,7 +18,12 @@
 #include <directxmath.h>
 #include <directxcolors.h>
 
+#include "FPScamera.h"
+#include "Matrix4x4.h"
+#include "inputclass.h"
 
+
+using namespace CG_MATH;
 using namespace DirectX;
 
 //--------------------------------------------------------------------------------------
@@ -63,8 +68,11 @@ ID3D11Buffer*           g_pIndexBuffer = nullptr;
 ID3D11Buffer*           g_pConstantBuffer = nullptr;
 XMMATRIX                g_World1;
 XMMATRIX                g_World2;
+XMMATRIX				g_World3;
 XMMATRIX                g_View;
 XMMATRIX                g_Projection;
+FPScamera				g_Camera;
+InputClass				g_Input;
 
 
 //--------------------------------------------------------------------------------------
@@ -111,6 +119,8 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
 	}
 
 	CleanupDevice();
+	
+	g_Input.Shutdown();
 
 	return (int)msg.wParam;
 }
@@ -150,6 +160,9 @@ HRESULT InitWindow(HINSTANCE hInstance, int nCmdShow)
 		return E_FAIL;
 
 	ShowWindow(g_hWnd, nCmdShow);
+
+	// init InputDevice
+	g_Input.Initialize(hInstance, g_hWnd, rc.right - rc.left, rc.bottom - rc.top);
 
 	return S_OK;
 }
@@ -439,11 +452,24 @@ HRESULT InitDevice()
 		{ XMFLOAT3(1.0f, -1.0f, -1.0f), XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
 		{ XMFLOAT3(1.0f, -1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
 		{ XMFLOAT3(-1.0f, -1.0f, 1.0f), XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
+
+		// X 
+		{ XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(2.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+
+		// Y
+		{ XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(0.0f, 2.0f, 0.0f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+
+		// Z
+		{ XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3(0.0f, 0.0f, 2.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
+
 	};
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(SimpleVertex) * 8;
+	bd.ByteWidth = sizeof(vertices);//sizeof(SimpleVertex) * 8;
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	D3D11_SUBRESOURCE_DATA InitData;
@@ -478,9 +504,16 @@ HRESULT InitDevice()
 
 		6,4,5,
 		7,4,6,
+
+		// X
+		8, 9,
+		// Y
+		10, 11,
+		// Z
+		12, 13,
 	};
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(WORD) * 36;        // 36 vertices needed for 12 triangles in a triangle list
+	bd.ByteWidth = sizeof(indices);//sizeof(WORD) * 36;        // 36 vertices needed for 12 triangles in a triangle list
 	bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	InitData.pSysMem = indices;
@@ -514,7 +547,7 @@ HRESULT InitDevice()
 	g_View = XMMatrixLookAtLH(Eye, At, Up);
 
 	// Initialize the projection matrix
-	g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, width / (FLOAT)height, 0.01f, 100.0f);
+	g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4+.01f, width / (FLOAT)height, 0.01f, 100.0f);
 
 	return S_OK;
 }
@@ -580,20 +613,64 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 //--------------------------------------------------------------------------------------
 void Render()
 {
+	// update input
+	g_Input.Frame();
+
+	// update camera
+	{
+		// update camera direction
+
+		int mouseDeltX, mouseDeltY;
+		g_Input.GetMouseDelt(mouseDeltX, mouseDeltY);
+		g_Camera.rotate2D(mouseDeltX*0.1f, mouseDeltY*0.1f);
+
+		// update camera position
+
+		bool forward, back, left, right, up, down;
+		g_Input.GetMoveState(forward, back, left, right, up, down);
+		
+		float forwardDist = 0.0f, leftDist = 0.0f, upDist = 0.0f;
+		const float a = 0.001f;
+		forwardDist += forward ? a : 0;
+		forwardDist -= back ? a : 0;
+
+		leftDist += left ? a : 0;
+		leftDist -= right ? a : 0;
+		
+		upDist += up ? a : 0;
+		upDist -= down ? a : 0;
+
+		g_Camera.move(forwardDist, leftDist, upDist);
+
+
+		//ÉèÖÃ g_view
+		Matrix4x4 m = g_Camera.getMatrix();
+
+		g_View = 
+			XMMATRIX(
+				m.m11, m.m12, m.m13, m.m14,
+				m.m21, m.m22, m.m23, m.m24,
+				m.m31, m.m32, m.m33, m.m34,
+				m.m41, m.m42, m.m43, m.m44);
+	}
+
 	// Update our time
 	static float t = 0.0f;
-	if (g_driverType == D3D_DRIVER_TYPE_REFERENCE)
-	{
-		t += (float)XM_PI * 0.0125f;
-	}
-	else
-	{
-		static ULONGLONG timeStart = 0;
-		ULONGLONG timeCur = GetTickCount64();
-		if (timeStart == 0)
-			timeStart = timeCur;
-		t = (timeCur - timeStart) / 1000.0f;
-	}
+	//if (g_driverType == D3D_DRIVER_TYPE_REFERENCE)
+	//{
+	//	t += (float)XM_PI * 0.0125f;
+	//}
+	//else
+	//{
+	//	static ULONGLONG timeStart = 0;
+	//	ULONGLONG timeCur = GetTickCount64();
+	//	if (timeStart == 0)
+	//		timeStart = timeCur;
+	//	t = (timeCur - timeStart) / 1000.0f;
+	//}
+
+	// axis:
+	g_World3 = XMMatrixScaling(10.0f, 10.0f, 10.0f);
 
 	// 1st Cube: Rotate around the origin
 	g_World1 = XMMatrixRotationY(t);
@@ -631,7 +708,10 @@ void Render()
 	g_pImmediateContext->VSSetShader(g_pVertexShader, nullptr, 0);
 	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 	g_pImmediateContext->PSSetShader(g_pPixelShader, nullptr, 0);
+	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	g_pImmediateContext->DrawIndexed(36, 0, 0);
+	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	g_pImmediateContext->DrawIndexed(6, 36, 0);
 
 	//
 	// Update variables for the second cube
@@ -645,7 +725,27 @@ void Render()
 	//
 	// Render the second cube
 	//
+	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	g_pImmediateContext->DrawIndexed(36, 0, 0);
+	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	g_pImmediateContext->DrawIndexed(6, 36, 0);
+
+
+	//
+	// Update variables for axis
+	//
+	ConstantBuffer cb3;
+	cb3.mWorld = XMMatrixTranspose(g_World3);
+	cb3.mView = XMMatrixTranspose(g_View);
+	cb3.mProjection = XMMatrixTranspose(g_Projection);
+	g_pImmediateContext->UpdateSubresource(g_pConstantBuffer, 0, nullptr, &cb3, 0, 0);
+
+	//
+	// Render the axis
+	//
+	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	g_pImmediateContext->DrawIndexed(6, 36, 0);
+
 
 	//
 	// Present our back buffer to our front buffer

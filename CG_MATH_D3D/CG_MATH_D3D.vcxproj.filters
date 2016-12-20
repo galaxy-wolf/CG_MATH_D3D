@@ -7,6 +7,9 @@
     <Filter Include="HeadFile">
       <UniqueIdentifier>{d8b5c77a-f2d9-474b-95ea-c56fa9a2455f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{9c5f043e-b50f-42eb-b385-4ecc6d2e70b2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -60,5 +63,16 @@
     <ClInclude Include="Matrix4x3.h">
       <Filter>HeadFile</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Tutorial05.fx">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Tutorial05_PS.hlsl">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="Tutorial05_VS.hlsl">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

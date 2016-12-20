@@ -21,7 +21,9 @@
 #include "FPScamera.h"
 #include "Matrix4x4.h"
 #include "inputclass.h"
+#include "MathUtil.h"
 
+#include "test.h"
 
 using namespace CG_MATH;
 using namespace DirectX;
@@ -547,7 +549,16 @@ HRESULT InitDevice()
 	g_View = XMMatrixLookAtLH(Eye, At, Up);
 
 	// Initialize the projection matrix
-	g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4+.01f, width / (FLOAT)height, 0.01f, 100.0f);
+	//g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4+.01f, width / (FLOAT)height, 0.01f, 100.0f);
+
+	{
+		Matrix4x4 m;
+		m.setupPerspective(50.0f, width / (float)height, 0.01f, 100.0f);
+		g_Projection = toXMMATRIX(m);
+
+	}
+
+
 
 	return S_OK;
 }
@@ -646,28 +657,24 @@ void Render()
 		//ÉèÖÃ g_view
 		Matrix4x4 m = g_Camera.getMatrix();
 
-		g_View = 
-			XMMATRIX(
-				m.m11, m.m12, m.m13, m.m14,
-				m.m21, m.m22, m.m23, m.m24,
-				m.m31, m.m32, m.m33, m.m34,
-				m.m41, m.m42, m.m43, m.m44);
+		g_View = toXMMATRIX(m);
+		
 	}
 
 	// Update our time
 	static float t = 0.0f;
-	//if (g_driverType == D3D_DRIVER_TYPE_REFERENCE)
-	//{
-	//	t += (float)XM_PI * 0.0125f;
-	//}
-	//else
-	//{
-	//	static ULONGLONG timeStart = 0;
-	//	ULONGLONG timeCur = GetTickCount64();
-	//	if (timeStart == 0)
-	//		timeStart = timeCur;
-	//	t = (timeCur - timeStart) / 1000.0f;
-	//}
+	if (g_driverType == D3D_DRIVER_TYPE_REFERENCE)
+	{
+		t += (float)XM_PI * 0.0125f;
+	}
+	else
+	{
+		static ULONGLONG timeStart = 0;
+		ULONGLONG timeCur = GetTickCount64();
+		if (timeStart == 0)
+			timeStart = timeCur;
+		t = (timeCur - timeStart) / 1000.0f;
+	}
 
 	// axis:
 	g_World3 = XMMatrixScaling(10.0f, 10.0f, 10.0f);
@@ -746,6 +753,8 @@ void Render()
 	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 	g_pImmediateContext->DrawIndexed(6, 36, 0);
 
+	RedirectOutPut();
+	testEulerAngle();
 
 	//
 	// Present our back buffer to our front buffer

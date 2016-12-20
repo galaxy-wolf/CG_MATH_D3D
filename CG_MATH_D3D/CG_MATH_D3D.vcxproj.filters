@@ -10,6 +10,9 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{9c5f043e-b50f-42eb-b385-4ecc6d2e70b2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Test">
+      <UniqueIdentifier>{a63a679f-e8d3-483a-b492-572233076fe1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -40,6 +43,9 @@
     <ClCompile Include="inputclass.cpp">
       <Filter>SourceFile</Filter>
     </ClCompile>
+    <ClCompile Include="test.cpp">
+      <Filter>Test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EulerAngles.h">
@@ -68,6 +74,9 @@
     </ClInclude>
     <ClInclude Include="inputclass.h">
       <Filter>HeadFile</Filter>
+    </ClInclude>
+    <ClInclude Include="test.h">
+      <Filter>Test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

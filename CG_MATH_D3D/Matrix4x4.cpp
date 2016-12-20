@@ -39,8 +39,8 @@ namespace CG_MATH
 
 		//计算公共值；
 
-		float f = 1.0f / (tanf(fov / 2.0f));
-		float fn = far - near;
+		float f = 1.0f / (tanf(fov * .5f));
+		float fn = far / (far - near);
 
 		assert(fabs(fn) > 0.00001);
 
@@ -56,12 +56,12 @@ namespace CG_MATH
 
 		m31 = 0.0f;
 		m32 = 0.0f;
-		m33 = far / fn;
+		m33 = fn;
 		m34 = 1.0f;
 
 		m41 = 0.0f;
 		m42 = 0.0f;
-		m43 = far*near / -fn;
+		m43 = -near*fn;
 		m44 = 0.0f;
 
 	}

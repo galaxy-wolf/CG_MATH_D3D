@@ -356,6 +356,7 @@
     <ClCompile Include="Matrix4x4.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="RotationMatrix.cpp" />
+    <ClCompile Include="test.cpp" />
     <ClCompile Include="vector3.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -367,6 +368,7 @@
     <ClInclude Include="Matrix4x4.h" />
     <ClInclude Include="Quaternion.h" />
     <ClInclude Include="RotationMatrix.h" />
+    <ClInclude Include="test.h" />
     <ClInclude Include="vector3.h" />
   </ItemGroup>
   <ItemGroup>

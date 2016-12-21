@@ -15,7 +15,12 @@
 using namespace CG_MATH;
 using namespace DirectX;
 
+void RedirectOutPut();
+
 XMMATRIX toXMMATRIX(const Matrix4x4& m);
 void testEulerAngle();
+XMMATRIX testMatrix4x3();
 
-void RedirectOutPut();
+XMMATRIX testQuaternion();
+
+XMMATRIX testRotationMatrix();

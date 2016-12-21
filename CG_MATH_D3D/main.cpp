@@ -467,6 +467,10 @@ HRESULT InitDevice()
 		{ XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
 		{ XMFLOAT3(0.0f, 0.0f, 2.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
 
+		// Ðý×ªÖá
+		{ XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3(1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) }
+
 	};
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
@@ -513,6 +517,9 @@ HRESULT InitDevice()
 		10, 11,
 		// Z
 		12, 13,
+
+		// Ðý×ªÖá
+		14, 15
 	};
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.ByteWidth = sizeof(indices);//sizeof(WORD) * 36;        // 36 vertices needed for 12 triangles in a triangle list
@@ -557,7 +564,6 @@ HRESULT InitDevice()
 		g_Projection = toXMMATRIX(m);
 
 	}
-
 
 
 	return S_OK;
@@ -688,7 +694,11 @@ void Render()
 	XMMATRIX mTranslate = XMMatrixTranslation(-4.0f, 0.0f, 0.0f);
 	XMMATRIX mScale = XMMatrixScaling(0.3f, 0.3f, 0.3f);
 
-	g_World2 = mScale * mSpin * mTranslate * mOrbit;
+	//g_World2 = mScale * mSpin * mTranslate * mOrbit;
+
+
+	g_World2 = testMatrix4x3();
+
 
 	//
 	// Clear the back buffer
@@ -699,7 +709,7 @@ void Render()
 	// Clear the depth buffer to 1.0 (max depth)
 	//
 	g_pImmediateContext->ClearDepthStencilView(g_pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
-
+	
 	//
 	// Update variables for the first cube
 	//
@@ -715,10 +725,10 @@ void Render()
 	g_pImmediateContext->VSSetShader(g_pVertexShader, nullptr, 0);
 	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 	g_pImmediateContext->PSSetShader(g_pPixelShader, nullptr, 0);
-	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	g_pImmediateContext->DrawIndexed(36, 0, 0);
-	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-	g_pImmediateContext->DrawIndexed(6, 36, 0);
+	//g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//g_pImmediateContext->DrawIndexed(36, 0, 0);
+	//g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	//g_pImmediateContext->DrawIndexed(6, 36, 0);
 
 	//
 	// Update variables for the second cube
@@ -751,10 +761,9 @@ void Render()
 	// Render the axis
 	//
 	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-	g_pImmediateContext->DrawIndexed(6, 36, 0);
+	g_pImmediateContext->DrawIndexed(8, 36, 0);
 
-	RedirectOutPut();
-	testEulerAngle();
+	
 
 	//
 	// Present our back buffer to our front buffer

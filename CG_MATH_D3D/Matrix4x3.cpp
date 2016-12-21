@@ -443,6 +443,8 @@ namespace CG_MATH
 	// 3=> 沿z= k 平面反射
 	//
 	//平移部分置为合适的值，因为k！= 0 时平移是一定会发生的
+	//
+	// 进行反射变换后，物体的内部面片会朝外，开启反面剔除后会产生影响
 
 	void Matrix4x3::setupReflect(int axis, float k) {
 
@@ -499,6 +501,8 @@ namespace CG_MATH
 	//
 	//构造反射矩阵，反射平面为通过原点的任意平面，且垂直于单位向量n
 	//平移部分置零
+	//
+	// 进行反射变换后，物体的内部面片会朝外，开启反面剔除后会产生影响
 
 	void Matrix4x3::setupReflect(const vector3 &n) {
 
@@ -571,8 +575,8 @@ namespace CG_MATH
 
 		//计算平移部分
 		r.tx = a.tx*b.m11 + a.ty*b.m21 + a.tz*b.m31 + b.tx;
-		r.ty = a.tx*b.m21 + a.ty*b.m22 + a.tz*b.m32 + b.ty;
-		r.tz = a.tx*b.m31 + a.ty*b.m23 + a.tz*b.m33 + b.tz;
+		r.ty = a.tx*b.m12 + a.ty*b.m22 + a.tz*b.m32 + b.ty;
+		r.tz = a.tx*b.m13 + a.ty*b.m23 + a.tz*b.m33 + b.tz;
 
 		return r;
 	}

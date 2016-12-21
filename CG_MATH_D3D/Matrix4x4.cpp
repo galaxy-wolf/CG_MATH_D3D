@@ -66,7 +66,6 @@ namespace CG_MATH
 
 	}
 
-	// 构造出矩阵同 glFrustum（http://earth.uni-muenster.de/~joergs/opengl/glFrustum.html）
 
 	void Matrix4x4::setupFrustum(float left, float right, float bottom, float top, float near, float far) {
 
@@ -86,22 +85,22 @@ namespace CG_MATH
 
 		m11 = 2.0f*near / rl;
 		m12 = 0.0f;
-		m13 = (right + left) / rl;
+		m13 = 0.0f;
 		m14 = 0.0f;
 
 		m21 = 0.0f;
 		m22 = 2.0f*near / tb;
-		m23 = (top + bottom) / tb;
+		m23 = 0.0f;
 		m24 = 0.0f;
 
-		m31 = 0.0f;
-		m32 = 0.0f;
-		m33 = (far + near) / fn;
-		m34 = (2 * far*near) / fn;
+		m31 = (right + left) / -rl;
+		m32 = (top + bottom) / -tb;
+		m33 = far / fn;
+		m34 = 1.0f;
 
 		m41 = 0.0f;
 		m42 = 0.0f;
-		m43 = -1;
+		m43 = near*far/-fn;
 		m44 = 0.0f;
 		
 	}

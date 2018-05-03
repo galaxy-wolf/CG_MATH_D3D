@@ -26,13 +26,13 @@ namespace CG_MATH
 	//
 	//根据严格的线性代数法则，这种乘法是不成立的。
 	//我们可以假设，输入和输出向量有第四个分量，都为1
-	//另外，由于3x4矩阵是不能求逆的， 因此假设矩阵有第4行，为[0 0 0 1]
+	//另外，由于4x3矩阵是不能求逆的， 因此假设矩阵有第4列，为[0 0 0 1]
 	//如下所示：
 	//
-	//               |m11 m12 m13 tx|   
-	//			     |m21 m22 m23 ty|   
-	//   |x y z 1| * |m31 m32 m33 tz| = |x' y' z' 1|
-	//               |0   0   0   1 |   
+	//               |m11 m12 m13 0|   
+	//			     |m21 m22 m23 0|   
+	//   |x y z 1| * |m31 m32 m33 0| = |x' y' z' 1|
+	//               |tx  ty  tz  1|   
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -58,7 +58,7 @@ namespace CG_MATH
 	// Matrix4x3::zeroTranslation
 	//将包含平移部分的第四列置为零
 
-	void Matrix4x3::zeroTanslation() {
+	void Matrix4x3::zeroTranslation() {
 		tx = ty = tz = 0.0f;
 	}
 
@@ -71,10 +71,10 @@ namespace CG_MATH
 	}
 
 	//----------------------------------------------------------------------------------------------------
-	// Matrix4x3::setupTanslation
+	// Matrix4x3::setupTranslation
 	//生成平移矩阵，参数为向量形式
 
-	void Matrix4x3::setupTanslation(const vector3 &d) {
+	void Matrix4x3::setupTranslation(const vector3 &d) {
 		
 		//线性变换部分置为单位矩阵
 
@@ -91,7 +91,7 @@ namespace CG_MATH
 	//----------------------------------------------------------------------------------------------
 	// Matrix4x3::setupLocalToParent
 	// 构造执行局部->父空间变换的矩阵，局部空间的位置和范围在父空间中描述
-	//该方法最常见的用途是构造物体->世界的变换矩阵，这个变换时非常直接的。
+	//该方法最常见的用途是构造物体->世界的变换矩阵，这个变换是非常直接的。
 	//首先从物体空间变换到惯性空间，接着变换到世界空间
 	//方位可以由欧拉角后旋转矩阵指定
 
@@ -102,14 +102,14 @@ namespace CG_MATH
 		RotationMatrix orientMatrix;
 		orientMatrix.setup(orient);
 
-		// 构造3x4矩阵
+		// 构造4x3矩阵
 
 		setupLocalToParent(pos, orientMatrix);
 	}
 
 	void Matrix4x3::setupLocalToParent(const vector3 &pos, const RotationMatrix &orient) {
 
-		// 复制矩阵得旋转部分
+		// 复制矩阵的旋转部分
 		//根据RotationMatrix 中的注释，旋转矩阵“一般”是惯性-物体矩阵
 		//是父-局部关系
 		//我们求的是局部-父关系的矩阵，因此要做转置
@@ -118,7 +118,7 @@ namespace CG_MATH
 		m21 = orient.m12; m22 = orient.m22; m23 = orient.m32;
 		m31 = orient.m13; m32 = orient.m23; m33 = orient.m33;
 
-		//现在设置平移部分。 平移再3x3 部分"之后“， 因此我们只需要简单复制其位置即可
+		//现在设置平移部分。 平移在3x3 部分"之后“， 因此我们只需要简单复制其位置即可
 
 		tx = pos.x; ty = pos.y; tz = pos.z;
 
@@ -129,8 +129,8 @@ namespace CG_MATH
 	// 构造执行父-局部空间变换的矩阵，局部空间的位置和方位在父空间中描述
 	// 该方法最常见的用途是构造世界-物体的变换矩阵
 	// 通常这个变换首先从世界转换到惯性空间，接着转换到物体空间
-	// 3x4 矩阵可以完成后一个转换
-	// 所以我们想构造两个矩阵T和R，再连接M=RT
+	// 4x3 矩阵可以完成后一个转换
+	// 所以我们想构造两个矩阵T和R，再连接M=TR
 	// 方位可以由欧拉角或旋转矩阵指定
 
 	void Matrix4x3::setupParentToLocal(const vector3 &pos, const EulerAngles &orient) {
@@ -140,7 +140,7 @@ namespace CG_MATH
 		RotationMatrix orientMatrix;
 		orientMatrix.setup(orient);
 
-		//构造3x4 矩阵
+		//构造4x3 矩阵
 
 		setupParentToLocal(pos, orientMatrix);
 	}
@@ -158,7 +158,7 @@ namespace CG_MATH
 		// 一般来说，从世界空间到惯性空间只需要平移负的量
 		// 但必须记得旋转是“先”发生的，所以应该旋转平移部分
 		// 这和先创建平移-pos的矩阵，再创建旋转矩阵R，
-		// 再把它们连接成RT是一样的
+		// 再把它们连接成TR是一样的
 
 		tx = -(pos.x*m11 + pos.y*m21 + pos.z*m31);
 		ty = -(pos.x*m12 + pos.y*m22 + pos.z*m32);
@@ -225,7 +225,7 @@ namespace CG_MATH
 	// Matrix4x3::setupRotate
 	//构造绕任意轴旋转，任意轴通过原点
 	//旋转轴为单位向量
-	//theta 是旋转向量，以弧度表示，用右手法则来定义"正方向"
+	//theta 是旋转向量，以弧度表示，用左手法则来定义"正方向"
 	//平移部分置零
 
 	void Matrix4x3::setupRotate(const vector3 &axis, float theta) {

@@ -34,11 +34,11 @@ namespace CG_MATH
 
 		// 直接访问平移部分
 
-		void zeroTanslation();
+		void zeroTranslation();
 		void setTranslation(const vector3 &d);
-		void setupTanslation(const vector3 &d);
+		void setupTranslation(const vector3 &d);
 
-		// 构造执行父空间 <->局部空间变换的矩阵，嘉定局部空间在指定的位置和方位， 该方位可能是使用欧拉角或旋转矩阵表示的。
+		// 构造执行父空间 <->局部空间变换的矩阵，假定局部空间在指定的位置和方位， 该方位可能是使用欧拉角或旋转矩阵表示的。
 
 		void setupLocalToParent(const vector3 &pos, const EulerAngles &orient);
 		void setupLocalToParent(const vector3 &pos, const RotationMatrix &orient);
@@ -83,7 +83,7 @@ namespace CG_MATH
 
 	};
 
-	// 运算符* 用来变换点或连接矩阵，乘法的顺序从左向右，与变换顺序相反。
+	// 运算符* 用来变换点或连接矩阵，乘法的顺序从左向右，与变换顺序相同。
 
 	vector3 operator*(const vector3 &p, const Matrix4x3 &m);
 	Matrix4x3 operator*(const Matrix4x3 &a, const Matrix4x3 &b);
@@ -97,7 +97,7 @@ namespace CG_MATH
 	// 计算3x3 部分的行列式
 	float determinant(const Matrix4x3 &m);
 
-	//计算矩阵得逆
+	//计算矩阵的逆
 
 	Matrix4x3 inverse(const Matrix4x3 &m);
 

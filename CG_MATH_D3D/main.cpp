@@ -560,7 +560,7 @@ HRESULT InitDevice()
 
 	{
 		Matrix4x4 m;
-		m.setupPerspective(50.0f, width / (float)height, 0.01f, 100.0f);
+		m.setupPerspectiveFov(50.0f, width / (float)height, 0.01f, 100.0f);
 		//m.setupFrustum(-.0023f *width / (float)height, .0046f*width / (float)height, -.0023f, .0046f, .01f, 100.0f);
 		g_Projection = toXMMATRIX(m);
 

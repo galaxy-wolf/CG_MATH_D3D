@@ -68,7 +68,7 @@ XMMATRIX testMatrix4x3() {
 	Matrix4x3 m;
 	m.identity();
 
-	m.setupTanslation(vector3(2.0f, -2.0f, -4.0f));
+	m.setupTranslation(vector3(2.0f, -2.0f, -4.0f));
 
 	m.setupLocalToParent(vector3(2.0f, -2.0f, -4.0f), EulerAngles(kPiOver2, kPiOver2 / 2, 0));
 

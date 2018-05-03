@@ -29,7 +29,7 @@ namespace CG_MATH
 
 		void identity();
 
-		// 从3x4矩阵构造
+		// 从4x3矩阵构造
 		
 		Matrix4x4(Matrix4x3 &a) {
 
@@ -47,12 +47,12 @@ namespace CG_MATH
 
 		// 构造投影变换矩阵
 
-		void setupPerspective(float fov, float aspect, float near, float far);
+		void setupPerspectiveFov(float fov, float aspect, float near, float far);
 		void setupFrustum(float left, float right, float bottom, float top, float near, float far);
 
 	};
 
-	// 运算符* 用来连接矩阵，乘法的顺序从左向右，与变换顺序相反。
+	// 运算符* 用来连接矩阵，乘法的顺序从左向右，与变换顺序相同。
 
 	Matrix4x4 operator*(const Matrix4x4 &a, const Matrix4x4 &m);
 
@@ -60,8 +60,7 @@ namespace CG_MATH
 
 	Matrix4x4 &operator*= (Matrix4x4 &a, const Matrix4x4 &m);
 
-	// 计算矩阵得逆
-
-	Matrix4x4 inverse(const Matrix4x4 &m);
+	// 计算矩阵的逆
+	//Matrix4x4 inverse(const Matrix4x4 &m);
 
 }

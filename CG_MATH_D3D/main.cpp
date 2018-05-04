@@ -93,6 +93,9 @@ void Render();
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
+	RedirectOutPut();
+	testAllFile();
+
 	UNREFERENCED_PARAMETER(hPrevInstance);
 	UNREFERENCED_PARAMETER(lpCmdLine);
 
@@ -662,7 +665,7 @@ void Render()
 
 
 		//…Ë÷√ g_view
-		Matrix4x4 m = g_Camera.getMatrix();
+		Matrix4x4 m = Matrix4x4(g_Camera.getMatrix());
 
 		g_View = toXMMATRIX(m);
 		

@@ -4,7 +4,10 @@
 #include "Matrix4x3.h"
 #include "EulerAngles.h"
 
-using namespace CG_MATH;
+using CG_MATH::vector3;
+using CG_MATH::EulerAngles;
+using CG_MATH::kEulerAnglesIdentity;
+using CG_MATH::Matrix4x3;
 
 class FPScamera
 {

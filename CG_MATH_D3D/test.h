@@ -11,16 +11,6 @@
 #include "RotationMatrix.h"
 #include "vector3.h"
 
-
-using namespace CG_MATH;
-using namespace DirectX;
-
+DirectX::XMMATRIX toXMMATRIX(const CG_MATH::Matrix4x4& m);
+int testAllFile();
 void RedirectOutPut();
-
-XMMATRIX toXMMATRIX(const Matrix4x4& m);
-void testEulerAngle();
-XMMATRIX testMatrix4x3();
-
-XMMATRIX testQuaternion();
-
-XMMATRIX testRotationMatrix();

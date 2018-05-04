@@ -2,6 +2,11 @@
 #include "EulerAngles.h"
 #include "MathUtil.h"
 #include "RotationMatrix.h"
+#include "vector3.h"
+
+using CG_MATH::RotationMatrix;
+using CG_MATH::kPi;
+using CG_MATH::wrapPi;
 
 //移动位置
 
@@ -10,14 +15,9 @@ void FPScamera::move(float front, float left, float up) {
 	RotationMatrix m;
 	m.setup(dir);
 
-	//需要得到相机坐标在世界坐标的表示，
-	// 1， m 是从世界坐标到相机坐标的转换，m的转置表示物体旋转矩阵。
-	// 2， 物体旋转矩阵的三个行即为相机X Y Z 轴在世界坐标的表示。
+	// 移动发生在相机的物体坐标系
 
-	pos.x += front*m.m13 - left*m.m11 + up*m.m12;
-	pos.y += front*m.m23 - left*m.m21 + up*m.m22;
-	pos.z += front*m.m33 - left*m.m31 + up*m.m32;
-
+	pos += m.objectToInertial(vector3(-left, up, front));
 }
 
 //转动方向

@@ -1,0 +1,41 @@
+test all file:
+test EulerAngles: 
+(eulerAngles) 0, 0, 0
+canonize
+(eulerAngles) 9.42478, 2.0944, 4.71239
+(eulerAngles) 2.38419e-07, 1.0472, 1.5708
+(eulerAngles) 0, 1.0472, 1.5708
+Gimble lock
+(eulerAngles) 3.14159, 1.5708, 4.71239
+(eulerAngles) 1.5708, 1.5708, 0
+(eulerAngles) 1.5708, 0.314159, 0.523599
+(eulerAngles) 1.5708, 0.314159, 0.523599
+(eulerAngles) 1.5708, 0.314159, 0.523599
+(eulerAngles) 1.5708, 0.314159, 0.523599
+(eulerAngles) 1.5708, 0.314159, 0.523599
+(eulerAngles) 1.5708, 0.314159, 0.523599
+(eulerAngles) 1.5708, 0.314159, 0.523599
+(eulerAngles) 1.5708, 0.314159, 0.523599
+(eulerAngles) 1.5708, 0.314159, 0.523599
+(eulerAngles) 1.5708, 0.314159, 0.523599
+test EulerAngles Error num: 0
+test FPScamera: 
+test FPScamera Error num: 0
+test mathUtil: 
+test mathUtil Error num: 0
+test Matrix4x3:
+test Matrix4x3 Error num: 0
+test Matrix4x4:
+test Matrix4x4 Error num: 0
+test Quaternion:
+quaternion pow:
+(Quaternion)
+0.258819, -0.965926, 3.09086e-08, 3.09086e-08
+(Quaternion)
+0.793353, -0.608761, 1.94797e-08, 1.94797e-08
+test Quaternion error num: 0
+test RotationMatrix:
+test RoationMatrix error num: 0
+test vector3:
+test vector3 error num: 0
+no Error in CG_MATH.

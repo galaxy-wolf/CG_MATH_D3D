@@ -11,15 +11,28 @@ namespace CG_MATH
 	//本类用来表示透视投影变换矩阵
 
 	//置为单位矩阵
-	void Matrix4x4::identity() {
+	void Matrix4x4::identity()
+	{
 		m11 = 1.0f; m12 = 0.0f; m13 = 0.0f; m14 = 0.0f;
 		m21 = 0.0f; m22 = 1.0f; m23 = 0.0f; m24 = 0.0f;
 		m31 = 0.0f; m32 = 0.0f; m33 = 1.0f; m34 = 0.0f;
 		m41 = 0.0f; m42 = 0.0f; m43 = 0.0f; m44 = 1.0f;
 	}
 
+	Matrix4x4::Matrix4x4(const Matrix4x3 &a)
+	{
+		// 直接赋值
+
+		m11 = a.m11; m12 = a.m12; m13 = a.m13; m14 = 0.0f;
+		m21 = a.m21; m22 = a.m22; m23 = a.m23; m24 = 0.0f;
+		m31 = a.m31; m32 = a.m32; m33 = a.m33; m34 = 0.0f;
+		m41 = a.tx;  m42 = a.ty;  m43 = a.tz;  m44 = 1.0f;
+	}
+
+
 	//构造投影矩阵
-	void Matrix4x4::setupPerspectiveFov(float fov, float aspect, float near, float far) {
+	void Matrix4x4::setupPerspectiveFov(float fov, float aspect, float near, float far) 
+	{
 
 		assert(aspect != 0.0f);
 		assert(near > 0.0f);
@@ -58,7 +71,8 @@ namespace CG_MATH
 	}
 
 	// 透视投影
-	void Matrix4x4::setupFrustum(float left, float right, float bottom, float top, float near, float far) {
+	void Matrix4x4::setupFrustum(float left, float right, float bottom, float top, float near, float far) 
+	{
 		assert(right > left);
 		assert(top > bottom);
 		assert(near > 0.0f);
@@ -68,7 +82,7 @@ namespace CG_MATH
 		float reciprocalWidth = 1.0f / (right - left);
 		float reciprocalHeight = 1.0f / (top - bottom);
 		float fRange = far / (far - near);
-		
+
 
 		//直接赋值
 
@@ -91,12 +105,13 @@ namespace CG_MATH
 		m42 = -(top + bottom) *reciprocalHeight;
 		m43 = -near*fRange;
 		m44 = 0.0f;
-		
+
 	}
 
 	// 运算符* 用来连接矩阵， 乘法的顺序从左向右， 与变换顺序相同
 
-	Matrix4x4 operator*(const Matrix4x4 &a, const Matrix4x4 &m) {
+	Matrix4x4 operator*(const Matrix4x4 &a, const Matrix4x4 &m) 
+	{
 		Matrix4x4 ret;
 
 		ret.m11 = a.m11*m.m11 + a.m12*m.m21 + a.m13*m.m31 + a.m14*m.m41;
@@ -124,9 +139,10 @@ namespace CG_MATH
 
 	// 运算符*= 保持和c++标准语法一致。
 
-	Matrix4x4 &operator*= (Matrix4x4 &a, const Matrix4x4 &m) {
+	Matrix4x4 &operator*= (Matrix4x4 &a, const Matrix4x4 &m) 
+	{
 		a = a*m;
-		
+
 		return a;
 	}
 

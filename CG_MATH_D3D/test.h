@@ -12,5 +12,8 @@
 #include "vector3.h"
 
 DirectX::XMMATRIX toXMMATRIX(const CG_MATH::Matrix4x4& m);
+DirectX::XMMATRIX toXMMATRIX(const CG_MATH::Matrix4x3& m);
+DirectX::XMMATRIX toXMMATRIX(const CG_MATH::RotationMatrix& m);
+
 int testAllFile();
 void RedirectOutPut();

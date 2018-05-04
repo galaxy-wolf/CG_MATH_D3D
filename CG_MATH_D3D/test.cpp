@@ -9,13 +9,15 @@ using namespace DirectX;
 using std::cout;
 using std::endl;
 
-void RedirectOutPut() {
+void RedirectOutPut() 
+{
 	freopen("test-result.txt", "w+", stdout);
 }
 
 // 转换到系统类型，方便在场景中测试
 
-XMMATRIX toXMMATRIX(const Matrix4x4& m) {
+XMMATRIX toXMMATRIX(const Matrix4x4& m) 
+{
 
 	XMMATRIX r(
 		m.m11, m.m12, m.m13, m.m14,
@@ -26,11 +28,13 @@ XMMATRIX toXMMATRIX(const Matrix4x4& m) {
 	return r;
 }
 
-XMMATRIX toXMMATRIX(const Matrix4x3& m) {
+XMMATRIX toXMMATRIX(const Matrix4x3& m)
+{
 	return toXMMATRIX(Matrix4x4(m));
 }
 
-XMMATRIX toXMMATRIX(const RotationMatrix& m) {
+XMMATRIX toXMMATRIX(const RotationMatrix& m) 
+{
 
 	XMMATRIX r(
 		m.m11, m.m12, m.m13, 0,

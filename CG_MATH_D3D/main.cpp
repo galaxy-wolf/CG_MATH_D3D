@@ -1,16 +1,10 @@
 //--------------------------------------------------------------------------------------
-// File: Tutorial05.cpp
 //
-// This application demonstrates animation using matrix transformations
-//
-// http://msdn.microsoft.com/en-us/library/windows/apps/ff729722.aspx
-//
-// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
-// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
-// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
-// PARTICULAR PURPOSE.
-//
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// 在一个简单场景中测试CG_MATH
+// 1, FPScamera
+// 2, Matri4x3 中的物体和世界之间的坐标变换
+// 使用CG_MATH中的类型替换directxmath
+// 替换的部分使用 @@ 标注。
 //--------------------------------------------------------------------------------------
 #include <windows.h>
 #include <d3d11_1.h>
@@ -73,8 +67,10 @@ XMMATRIX                g_World2;
 XMMATRIX				g_World3;
 XMMATRIX                g_View;
 XMMATRIX                g_Projection;
-FPScamera				g_Camera;
 InputClass				g_Input;
+
+// CG_MATH的FPSCamera
+FPScamera				g_Camera;
 
 
 //--------------------------------------------------------------------------------------
@@ -93,6 +89,7 @@ void Render();
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 {
+	//@@ 首先运行test.cpp 中的基本测试项，
 	RedirectOutPut();
 	testAllFile();
 
@@ -553,22 +550,27 @@ HRESULT InitDevice()
 	g_World2 = XMMatrixIdentity();
 
 	// Initialize the view matrix
+	/*
 	XMVECTOR Eye = XMVectorSet(0.0f, 1.0f, -5.0f, 0.0f);
 	XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
 	g_View = XMMatrixLookAtLH(Eye, At, Up);
+	*/
+
+	// @@ 设置FPScamera 的初始值
+	g_Camera.pos = vector3(0.0f, 0.0f, -10.0f);
+	g_Camera.dir.identity();
 
 	// Initialize the projection matrix
 	//g_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV4+.01f, width / (FLOAT)height, 0.01f, 100.0f);
 
+	// @@ 使用Matrix4x4 作为透视投影矩阵
 	{
 		Matrix4x4 m;
 		m.setupPerspectiveFov(50.0f, width / (float)height, 0.01f, 100.0f);
 		//m.setupFrustum(-.0023f *width / (float)height, .0046f*width / (float)height, -.0023f, .0046f, .01f, 100.0f);
 		g_Projection = toXMMATRIX(m);
-
 	}
-
 
 	return S_OK;
 }
@@ -637,7 +639,7 @@ void Render()
 	// update input
 	g_Input.Frame();
 
-	// update camera
+	// @@ update camera
 	{
 		// update camera direction
 
@@ -686,23 +688,30 @@ void Render()
 		t = (timeCur - timeStart) / 1000.0f;
 	}
 
-	// axis:
-	g_World3 = XMMatrixScaling(10.0f, 10.0f, 10.0f);
 
 	// 1st Cube: Rotate around the origin
-	g_World1 = XMMatrixRotationY(t);
+	Matrix4x3 m;
+	m.setupRotate(2, t);
+	g_World1 = toXMMATRIX(m);
 
 	// 2nd Cube:  Rotate around origin
-	XMMATRIX mSpin = XMMatrixRotationZ(-t);
+	/*XMMATRIX mSpin = XMMatrixRotationZ(-t);
 	XMMATRIX mOrbit = XMMatrixRotationY(-t * 2.0f);
 	XMMATRIX mTranslate = XMMatrixTranslation(-4.0f, 0.0f, 0.0f);
 	XMMATRIX mScale = XMMatrixScaling(0.3f, 0.3f, 0.3f);
+	*/
 
-	//g_World2 = mScale * mSpin * mTranslate * mOrbit;
+	Matrix4x3 mSpin, mOrbit, mTranslate, mScale;
+	mSpin.setupRotate(3, -t);
+	mOrbit.setupRotate(2, t * 2.0f);
+	mTranslate.setupTranslation(vector3(-4.0f, 0.0f, 0.0f));
+	mScale.setupScale(vector3(0.3f, 0.3f, 0.3f));
+	g_World2 = toXMMATRIX(mScale * mSpin * mTranslate * mOrbit);
 
-
-	XMMatrixIsIdentity(g_World2);//testMatrix4x3();
-
+	// axis:
+	Matrix4x3 axisScale;
+	axisScale.setupScale(vector3(10.0f, 10.0f, 10.0f));
+	g_World3 = toXMMATRIX(axisScale);
 
 	//
 	// Clear the back buffer
@@ -729,10 +738,10 @@ void Render()
 	g_pImmediateContext->VSSetShader(g_pVertexShader, nullptr, 0);
 	g_pImmediateContext->VSSetConstantBuffers(0, 1, &g_pConstantBuffer);
 	g_pImmediateContext->PSSetShader(g_pPixelShader, nullptr, 0);
-	//g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//g_pImmediateContext->DrawIndexed(36, 0, 0);
-	//g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-	//g_pImmediateContext->DrawIndexed(6, 36, 0);
+	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	g_pImmediateContext->DrawIndexed(36, 0, 0);
+	g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	g_pImmediateContext->DrawIndexed(6, 36, 0);
 
 	//
 	// Update variables for the second cube

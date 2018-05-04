@@ -11,6 +11,7 @@
 #include <d3dcompiler.h>
 #include <directxmath.h>
 #include <directxcolors.h>
+#include <wchar.h>
 
 #include "FPScamera.h"
 #include "Matrix4x4.h"
@@ -688,6 +689,21 @@ void Render()
 		t = (timeCur - timeStart) / 1000.0f;
 	}
 
+	{
+		static float last = GetTickCount64();
+		float now = GetTickCount64();
+		float s = (now - last)/1000.0f;
+
+		// show fps;
+		float fps = 1.0f / (now - last);
+		if (fps > 1000) fps = 1000;
+
+		WCHAR str[30];
+		swprintf(str, L"fps:%.1f", fps);
+		SetWindowText(g_hWnd, str); // 去掉这句，移动场景会变卡？
+		last = now;
+
+	}
 
 	// 1st Cube: Rotate around the origin
 	Matrix4x3 m;

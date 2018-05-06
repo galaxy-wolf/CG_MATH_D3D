@@ -5,3 +5,6 @@
 
 ## 打开测试工程
 使用Visual Studio 2015打开项目。
+
+## OpenGL 版本
+https://github.com/galaxy-wolf/CG_MATH_OpenGL

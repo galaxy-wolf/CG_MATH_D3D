@@ -103,7 +103,7 @@ namespace CG_MATH
 	void EulerAngles::fromObjectToWorldMatrix(const Matrix4x3 &m)
 	{
 		
-		//通过m23计算sin(pitch).
+		//通过m32计算sin(pitch).
 		
 		float sp = -m.m32;
 		
@@ -209,7 +209,7 @@ namespace CG_MATH
 	void EulerAngles::fromRotationMatrix(const RotationMatrix &m) {
 
 
-		// 根据m32 计算sin(pitch)
+		// 根据m23 计算sin(pitch)
 
 		float sp = -m.m23;
 

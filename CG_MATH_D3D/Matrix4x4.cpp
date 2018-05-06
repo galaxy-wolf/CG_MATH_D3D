@@ -79,6 +79,7 @@ namespace CG_MATH
 		assert(far > 0.0f);
 		//计算公共值；
 
+		float towNear = near + near;
 		float reciprocalWidth = 1.0f / (right - left);
 		float reciprocalHeight = 1.0f / (top - bottom);
 		float fRange = far / (far - near);
@@ -86,23 +87,23 @@ namespace CG_MATH
 
 		//直接赋值
 
-		m11 = reciprocalWidth + reciprocalWidth;
+		m11 = towNear* reciprocalWidth;
 		m12 = 0.0f;
 		m13 = 0.0f;
 		m14 = 0.0f;
 
 		m21 = 0.0f;
-		m22 = reciprocalHeight + reciprocalHeight;
+		m22 = towNear *reciprocalHeight;
 		m23 = 0.0f;
 		m24 = 0.0f;
 
-		m31 = 0.0f;
-		m32 = 0.0f;
+		m31 = -(right + left) *reciprocalWidth;
+		m32 = -(top + bottom) *reciprocalHeight;
 		m33 = fRange;
 		m34 = 1.0f;
 
-		m41 = -(right + left) *reciprocalWidth;
-		m42 = -(top + bottom) *reciprocalHeight;
+		m41 = 0.0f;
+		m42 = 0.0f;
 		m43 = -near*fRange;
 		m44 = 0.0f;
 

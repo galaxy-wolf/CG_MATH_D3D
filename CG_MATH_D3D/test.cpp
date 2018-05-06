@@ -312,8 +312,8 @@ int testMatrix4x4()
 
 	Matrix4x4 m, m2;
 	m.identity();
-	m.setupPerspectiveFov(90.0f, 2.0f, 0.01f, 100.0f);
-	m2.setupFrustum(-2.0f, 2.0f, -1.0f, 1.0f, 0.01f, 100.0f);
+	m.setupPerspectiveFov(90.0f, 2.0f, 1.0f, 100.0f);
+	m2.setupFrustum(-2.0f, 2.0f, -1.0f, 1.0f, 1.0f, 100.0f);
 	assert(m == m2);
 
 	m = m*m2;
